@@ -1,11 +1,29 @@
 class Card {
-    constructor(id, name, type, rarity, description = '') {
+    static EMOJIS = [
+        '🏜️',  // Пустыня
+        '🚗',  // Машина
+        '⛽',  // Бензин
+        '🌵',  // Кактус (заменил череп)
+        '🔥',  // Огонь
+        '⚡',  // Молния
+        '🌪️',  // Буря
+        '🛡️',  // Щит
+        '⚔️',  // Оружие
+        '💪'   // Сила
+    ];
+
+    static CORNERS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+
+    constructor(id, name, type, rarity, description = '', victoryPoints = 0) {
         this.id = id;
         this.name = name;
         this.type = type.toUpperCase(); // MOVE, ATTACK, REST, HEAL
         this.rarity = rarity.toUpperCase(); // COMMON, RARE
         this.description = description || this.getDefaultDescription();
+        this.victoryPoints = victoryPoints; // 0-3 черепа
         this.element = null;
+        this.emoji = null;
+        this.emojiPosition = null;
     }
 
     getDefaultDescription() {
@@ -83,7 +101,9 @@ class Card {
         characters.forEach(char => {
             const count = char.rarity === 'RARE' ? 3 : (char.rarity === 'UNCOMMON' ? 4 : 5);
             for (let i = 0; i < count; i++) {
-                cards.push(new Card(id++, char.name, 'ATTACK', char.rarity, char.description));
+                // Редкие карты дают 3 очка, необычные 2, обычные 1
+                const victoryPoints = Math.random() < 0.7 ? (char.rarity === 'RARE' ? 3 : (char.rarity === 'UNCOMMON' ? 2 : 1)) : 0;
+                cards.push(new Card(id++, char.name, 'ATTACK', char.rarity, char.description, victoryPoints));
             }
         });
 
@@ -91,7 +111,8 @@ class Card {
         events.forEach(event => {
             const count = event.rarity === 'RARE' ? 3 : (event.rarity === 'UNCOMMON' ? 4 : 5);
             for (let i = 0; i < count; i++) {
-                cards.push(new Card(id++, event.name, 'MOVE', event.rarity, event.description));
+                const victoryPoints = Math.random() < 0.7 ? (event.rarity === 'RARE' ? 3 : (event.rarity === 'UNCOMMON' ? 2 : 1)) : 0;
+                cards.push(new Card(id++, event.name, 'MOVE', event.rarity, event.description, victoryPoints));
             }
         });
 
@@ -99,7 +120,8 @@ class Card {
         locations.forEach(location => {
             const count = location.rarity === 'RARE' ? 3 : (location.rarity === 'UNCOMMON' ? 4 : 5);
             for (let i = 0; i < count; i++) {
-                cards.push(new Card(id++, location.name, 'REST', location.rarity, location.description));
+                const victoryPoints = Math.random() < 0.7 ? (location.rarity === 'RARE' ? 3 : (location.rarity === 'UNCOMMON' ? 2 : 1)) : 0;
+                cards.push(new Card(id++, location.name, 'REST', location.rarity, location.description, victoryPoints));
             }
         });
 
@@ -109,22 +131,55 @@ class Card {
             [cards[i], cards[j]] = [cards[j], cards[i]];
         }
 
+        // Добавляем случайные эмодзи
+        cards.forEach(card => {
+            card.emoji = Card.EMOJIS[Math.floor(Math.random() * Card.EMOJIS.length)];
+            card.emojiPosition = Card.CORNERS[Math.floor(Math.random() * Card.CORNERS.length)];
+        });
+
         return cards;
     }
 
     createCardElement() {
         const cardElement = document.createElement('div');
-        cardElement.className = `card`;
+        cardElement.className = `card ${this.type}`;
         cardElement.dataset.type = this.type.toLowerCase();
         cardElement.dataset.rarity = this.rarity.toLowerCase();
         cardElement.dataset.cardId = this.id;
         
-        cardElement.innerHTML = `
-            <div class="card-name">${this.name}</div>
-            <div class="card-type">${this.type}</div>
-            <div class="card-description">${this.description}</div>
-            <div class="card-rarity">${this.rarity}</div>
-        `;
+        // Создаем основной контент карты
+        const nameElement = document.createElement('div');
+        nameElement.className = 'card-name';
+        nameElement.textContent = this.name;
+        
+        const typeElement = document.createElement('div');
+        typeElement.className = 'card-type';
+        typeElement.textContent = this.type;
+        
+        const descriptionElement = document.createElement('div');
+        descriptionElement.className = 'card-description';
+        descriptionElement.textContent = this.description;
+        
+        // Добавляем основной контент
+        cardElement.appendChild(nameElement);
+        cardElement.appendChild(typeElement);
+        cardElement.appendChild(descriptionElement);
+        
+        // Добавляем эмодзи, если он есть
+        if (this.emoji && this.emojiPosition) {
+            const emojiElement = document.createElement('div');
+            emojiElement.className = `card-emoji ${this.emojiPosition}`;
+            emojiElement.textContent = this.emoji;
+            cardElement.appendChild(emojiElement);
+        }
+        
+        // Добавляем победные очки (черепа) в самом конце
+        if (this.victoryPoints > 0) {
+            const victoryPointsElement = document.createElement('div');
+            victoryPointsElement.className = 'card-victory-points';
+            victoryPointsElement.textContent = '☠️'.repeat(this.victoryPoints);
+            cardElement.appendChild(victoryPointsElement);
+        }
 
         this.element = cardElement;
         return cardElement;

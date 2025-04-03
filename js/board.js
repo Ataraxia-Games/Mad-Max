@@ -101,7 +101,8 @@ class Board {
             const slot = this.boardElement.querySelector(`[data-position="${position}"]`);
             if (slot) {
                 slot.classList.add('occupied');
-                slot.setAttribute('data-player-id', playerId);
+                // Преобразуем playerId в строку для корректной работы CSS селекторов
+                slot.setAttribute('data-player-id', String(playerId));
             }
         });
     }
