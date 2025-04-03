@@ -2,64 +2,107 @@ let game;
 let network;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Создаем игру
-    window.game = new Game();
+    // Инициализация игры
+    initializeGame();
     
-    // Инициализируем игру без сокета (для тестового режима)
-    window.game.initialize();
+    // Настройка обработчиков событий
+    setupGameEventListeners();
+});
+
+function initializeGame() {
+    // Создаем экземпляр игры
+    game = new Game();
     
-    // Создаем трех тестовых игроков
-    const player1 = new Player('player1', 'Воин Пустоши');
-    const player2 = new Player('player2', 'Механик Дорог');
-    const player3 = new Player('player3', 'Рейдер Бури');
-
-    // Добавляем игроков в игру
-    window.game.addPlayer(player1);
-    window.game.addPlayer(player2);
-    window.game.addPlayer(player3);
-
+    // Инициализируем базовые компоненты игры
+    game.initialize();
+    
+    // Создаем тестовых игроков (временное решение)
+    createTestPlayers();
+    
     // Начинаем игру
-    window.game.startGame();
+    game.startGame();
+}
 
-    // Добавляем обработчик для кнопки End Turn
+function createTestPlayers() {
+    const players = [
+        { id: 'player1', name: 'Воин Пустоши' },
+        { id: 'player2', name: 'Механик Дорог' },
+        { id: 'player3', name: 'Рейдер Бури' }
+    ];
+    
+    players.forEach(playerData => {
+        const player = new Player(playerData.id, playerData.name);
+        game.addPlayer(player);
+    });
+}
+
+function setupGameEventListeners() {
+    // Обработчик выбора карты
+    document.addEventListener('click', handleCardSelection);
+    
+    // Обработчик выбора позиции
+    document.addEventListener('click', handlePositionSelection);
+    
+    // Обработчик кнопки завершения хода
+    setupEndTurnButton();
+}
+
+function handleCardSelection(e) {
+    const cardElement = e.target.closest('.card');
+    if (!cardElement || game.phase !== 'PLAYER_TURN') return;
+    
+    const cardId = parseInt(cardElement.dataset.cardId);
+    const currentPlayer = game.players[game.currentPlayerIndex];
+    
+    if (!currentPlayer) {
+        console.log('No current player');
+        return;
+    }
+    
+    const card = currentPlayer.hand.find(c => c.id === cardId);
+    if (card) {
+        currentPlayer.selectCard(card);
+    }
+}
+
+function handlePositionSelection(e) {
+    const slotElement = e.target.closest('.player-slot');
+    if (slotElement && game.phase === 'PLAYER_TURN') {
+        const position = parseInt(slotElement.dataset.position);
+        const currentPlayer = game.players[game.currentPlayerIndex];
+        
+        if (currentPlayer && currentPlayer.selectedCard) {
+            // Используем выбранную карту
+            if (currentPlayer.useSelectedCard()) {
+                // Если карта успешно использована, обновляем UI
+                game.updateGameInfo();
+            }
+        }
+    }
+}
+
+function setupEndTurnButton() {
     const endTurnBtn = document.getElementById('end-turn-btn');
     if (endTurnBtn) {
         endTurnBtn.addEventListener('click', () => {
-            if (window.game.currentPlayer) {
-                window.game.currentPlayer.endTurn();
+            const currentPlayer = game.players[game.currentPlayerIndex];
+            if (currentPlayer) {
+                // Если есть выбранная карта, используем её
+                if (currentPlayer.selectedCard) {
+                    currentPlayer.useSelectedCard();
+                }
+                // Завершаем ход
+                currentPlayer.endTurn();
+                game.updateGameInfo();
             }
         });
+    } else {
+        console.error('End Turn button not found');
     }
+}
 
-    // Добавляем обработчик кликов по игровому полю
-    document.getElementById('game-board').addEventListener('click', (event) => {
-        const playerSlot = event.target.closest('.player-slot');
-        if (playerSlot && window.game.phase === 'POSITION') {
-            const position = parseInt(playerSlot.dataset.position);
-            if (!isNaN(position)) {
-                window.game.handlePlayerPosition(window.game.currentPlayer, position);
-            }
-        }
-    });
-
-    // Добавляем обработчик для карт
-    document.addEventListener('click', (event) => {
-        const card = event.target.closest('.card');
-        if (card && window.game.phase === 'PLAY') {
-            const cardIndex = Array.from(card.parentElement.children).indexOf(card);
-            const targetSlot = event.target.closest('.player-slot, .card-slot');
-            
-            if (targetSlot) {
-                const position = parseInt(targetSlot.dataset.position);
-                if (!isNaN(position)) {
-                    window.game.handleCardPlay(cardIndex, position);
-                }
-            }
-        }
-    });
-});
-
-function setupEventListeners() {
+// Функции для сетевой игры
+function setupNetworkGame() {
     // Create room button
     document.getElementById('create-room').addEventListener('click', () => {
         const playerName = prompt('Enter your name:');

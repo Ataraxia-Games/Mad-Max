@@ -1,15 +1,7 @@
 class Card {
     static EMOJIS = [
-        '🏜️',  // Пустыня
-        '🚗',  // Машина
-        '⛽',  // Бензин
-        '🌵',  // Кактус (заменил череп)
-        '🔥',  // Огонь
-        '⚡',  // Молния
-        '🌪️',  // Буря
-        '🛡️',  // Щит
-        '⚔️',  // Оружие
-        '💪'   // Сила
+        '🏎️', '🔥', '⚡', '💨',
+        '🌪️', '💥', '🚀', '🏁'
     ];
 
     static CORNERS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
@@ -154,7 +146,8 @@ class Card {
             card.emojiPosition = Card.CORNERS[Math.floor(Math.random() * Card.CORNERS.length)];
         });
 
-        return cards;
+        // Берем первые 9 карт для поля
+        return cards.slice(0, 9);
     }
 
     createCardElement() {

@@ -1,0 +1,88 @@
+/* ===== Board Styles ===== */
+.board-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.unified-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: 0px;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    background-color: #333;
+    background-image: 
+        linear-gradient(to right, #000 1px, transparent 1px),
+        linear-gradient(to bottom, #000 1px, transparent 1px);
+    background-size: calc(100% / 7) calc(100% / 7);
+}
+
+/* Race Slots */
+.race-slot {
+    width: 30px;
+    height: 30px;
+    background-color: #333;
+    border: 2px solid #666;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.race-slot::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 45%, #666 45%, #666 55%, transparent 55%);
+    opacity: 0.5;
+}
+
+/* Empty Slots */
+.card-slot.empty {
+    background-color: #333;
+    border: 2px dashed #666;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.card-slot.empty:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* Responsive Board Styles */
+@media (max-width: 768px) {
+    .unified-grid {
+        gap: 5px;
+        padding: 5px;
+    }
+    
+    .race-slot {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+.spacer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    line-height: 1;
+    min-height: 40px;
+    opacity: 0.1;
+} 

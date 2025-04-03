@@ -1,0 +1,95 @@
+/* ===== UI Styles ===== */
+.game-info {
+    display: flex;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.phase-info, .round-info, .current-player {
+    padding: 5px 10px;
+    background-color: #444;
+    border-radius: 4px;
+}
+
+/* End Turn Button */
+.end-turn-btn {
+    position: absolute;
+    bottom: 220px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.end-turn-btn:hover {
+    background-color: #45a049;
+}
+
+/* Deck Areas */
+.deck-area {
+    width: 120px;
+    height: 160px;
+    background-color: #444;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.deck-area:hover {
+    transform: translateY(-5px);
+}
+
+.deck-label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.deck-count {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Hand Container */
+.hand-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px;
+}
+
+/* Responsive UI */
+@media (max-width: 768px) {
+    .game-info {
+        font-size: 12px;
+    }
+    
+    .end-turn-btn {
+        bottom: 180px;
+        font-size: 14px;
+    }
+    
+    .deck-area {
+        width: 100px;
+        height: 140px;
+    }
+    
+    .deck-label {
+        font-size: 12px;
+    }
+    
+    .deck-count {
+        font-size: 20px;
+    }
+} 

@@ -1,0 +1,100 @@
+/* ===== Player Styles ===== */
+.player-slot {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: 2px dashed #666;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    margin: auto;
+    position: relative;
+}
+
+.player-slot:hover {
+    border-color: #999;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.player-slot.available {
+    border: 2px solid #4CAF50;
+    box-shadow: 0 0 10px #4CAF50;
+    cursor: pointer;
+}
+
+.player-slot.available:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.player-slot.occupied {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.player-slot.occupied .player-marker {
+    width: 20px;
+    height: 20px;
+    margin: 0 2px;
+}
+
+/* Player Colors */
+.player-slot[data-player-id="player1"] {
+    background-color: #eb3a26; /* Красный */
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.5);
+}
+
+.player-slot[data-player-id="player2"] {
+    background-color: #ecce24; /* Оранжевый */
+    box-shadow: 0 0 15px rgba(230, 126, 34, 0.5);
+}
+
+.player-slot[data-player-id="player3"] {
+    background-color: #2ecc71; /* Зеленый */
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+}
+
+/* Player Stats */
+.player-stats {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.player-stats .stat {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.player-stats .stat-label {
+    color: #aaa;
+}
+
+.player-stats .stat-value {
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Responsive Player Styles */
+@media (max-width: 768px) {
+    .player-slot {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .player-slot.occupied .player-marker {
+        width: 15px;
+        height: 15px;
+    }
+    
+    .player-stats {
+        padding: 5px;
+        font-size: 12px;
+    }
+} 

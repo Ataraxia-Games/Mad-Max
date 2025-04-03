@@ -1,19 +1,62 @@
 class Game {
     constructor() {
+        // Игровые данные
         this.players = new Map();
         this.currentPlayer = null;
         this.turn = 0;
-        this.phase = 'SETUP'; // SETUP -> POSITION -> PLAY -> END
-        this.socket = null;
+        this.phase = 'SETUP';
+        this.round = 1;
+        
+        // Игровые компоненты
         this.board = new Board();
         this.fieldDeck = [];
-        this.round = 1;
+        
+        // Состояние игры
         this.positionedPlayers = new Set();
-        this.messageTimeout = null;
         this.currentPlayerIndex = 0;
         this.selectedCard = null;
         this.selectedPosition = null;
         this.availablePositions = new Set();
+        
+        // Сетевое взаимодействие
+        this.socket = null;
+        this.messageTimeout = null;
+    }
+
+    initialize(socket = null) {
+        console.log('Initializing game...');
+        
+        // 1. Инициализация игрового поля
+        this.initializeBoard();
+        
+        // 2. Создание полевой колоды
+        this.initializeFieldDeck();
+        
+        // 3. Настройка сетевого взаимодействия
+        this.initializeNetwork(socket);
+        
+        // 4. Обновление UI
+        this.updateGameInfo();
+        
+        console.log('Game initialized successfully');
+    }
+
+    initializeBoard() {
+        console.log('Initializing game board...');
+        this.board.initialize();
+    }
+
+    initializeFieldDeck() {
+        console.log('Creating field deck...');
+        this.fieldDeck = Card.createFieldDeck();
+    }
+
+    initializeNetwork(socket) {
+        if (socket) {
+            console.log('Setting up network connection...');
+            this.socket = socket;
+            this.setupSocketListeners();
+        }
     }
 
     setupEventListeners() {
@@ -25,28 +68,6 @@ class Game {
                 }
             });
         }
-    }
-
-    initialize(socket = null) {
-        // Инициализируем игровое поле
-        this.board.initialize();
-        
-        // Создаем полевую колоду
-        this.fieldDeck = Card.createFieldDeck();
-        
-        // Устанавливаем начальную фазу
-        this.phase = 'SETUP';
-        
-        // Настраиваем обработчики событий
-        this.setupEventListeners();
-        
-        // Если передан сокет, настраиваем сетевую игру
-        if (socket) {
-            this.socket = socket;
-            this.setupSocketListeners();
-        }
-        
-        this.updateGameInfo();
     }
 
     setupSocketListeners() {
@@ -72,33 +93,17 @@ class Game {
     }
 
     startGame() {
-        if (this.players.size < 1) {
-            console.log('Нет игроков для начала игры');
-            return;
-        }
-
-        // Создаем и перемешиваем полевую колоду
-        this.fieldDeck = Card.createFieldDeck();
-        
-        // Раздаем 8 карт на поле
-        for (let i = 0; i < 8; i++) {
-            if (this.fieldDeck.length > 0) {
-                const card = this.fieldDeck.pop();
-                this.board.placeCard(i, card);
-            }
-        }
-
-        // Инициализируем колоды всех игроков
-        for (const player of this.players.values()) {
-            player.initializeStarterDeck();
-        }
-
-        // Первый игрок начинает размещение
-        this.currentPlayer = this.players.values().next().value;
         this.phase = 'POSITION';
-        this.showMessage('Game started! Players, choose your positions!');
-        this.board.renderBoard();
-        this.updateGameInfo();
+        this.round = 1;
+        this.currentPlayerIndex = 0;
+        
+        // Размещаем карты на поле
+        const fieldDeck = Card.createFieldDeck();
+        fieldDeck.forEach((card, index) => {
+            this.board.placeCard(index + 1, card);
+        });
+        
+        this.updateGameState();
     }
 
     showMessage(text, duration = 3000) {
@@ -228,30 +233,32 @@ class Game {
         this.updateUI();
     }
 
-    updateGameState(state) {
-        this.turn = state.turn;
-        this.phase = state.phase;
-        this.currentPlayer = this.players.get(state.currentPlayerId);
-        
-        // Обновляем состояние поля
-        state.board.cardSlots.forEach((cardData, index) => {
-            if (cardData) {
-                const card = new Card(
-                    cardData.id,
-                    cardData.name,
-                    cardData.type,
-                    cardData.rarity,
-                    cardData.cost,
-                    cardData.stats
-                );
-                this.board.placeCard(index, card);
-            }
-        });
-        
-        // Обновляем позиции игроков
-        state.board.playerPositions.forEach((position, playerId) => {
-            this.board.playerPositions.set(playerId, position);
-        });
+    updateGameState(state = null) {
+        if (state) {
+            this.turn = state.turn;
+            this.phase = state.phase;
+            this.currentPlayer = this.players.get(state.currentPlayerId);
+            
+            // Обновляем состояние поля
+            state.board.cardSlots.forEach((cardData, index) => {
+                if (cardData) {
+                    const card = new Card(
+                        cardData.id,
+                        cardData.name,
+                        cardData.type,
+                        cardData.rarity,
+                        cardData.cost,
+                        cardData.stats
+                    );
+                    this.board.placeCard(index, card);
+                }
+            });
+            
+            // Обновляем позиции игроков
+            state.board.playerPositions.forEach((position, playerId) => {
+                this.board.playerPositions.set(playerId, position);
+            });
+        }
         
         this.updateUI();
     }

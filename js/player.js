@@ -15,19 +15,26 @@ class Player {
     initializeStarterDeck() {
         // Создаем начальную колоду из 10 карт
         this.deck = [
-            new Card(1, "Move!", "MOVE", "COMMON"),
-            new Card(2, "Move!", "MOVE", "COMMON"),
-            new Card(3, "Move!", "MOVE", "COMMON"),
-            new Card(4, "Attack!", "ATTACK", "COMMON"),
-            new Card(5, "Attack!", "ATTACK", "COMMON"),
-            new Card(6, "Attack!", "ATTACK", "COMMON"),
-            new Card(7, "Rest", "REST", "COMMON"),
-            new Card(8, "Rest", "REST", "COMMON"),
-            new Card(9, "Rest", "REST", "COMMON"),
-            new Card(10, "Heal", "HEAL", "RARE")
+            new Card(1, "Move", "MOVE", "COMMON", "Переместитесь на соседнюю клетку"),
+            new Card(2, "Move", "MOVE", "COMMON", "Переместитесь на соседнюю клетку"),
+            new Card(3, "Move", "MOVE", "COMMON", "Переместитесь на соседнюю клетку"),
+            new Card(4, "Attack", "ATTACK", "COMMON", "Атакуйте противника на соседней клетке"),
+            new Card(5, "Attack", "ATTACK", "COMMON", "Атакуйте противника на соседней клетке"),
+            new Card(6, "Attack", "ATTACK", "COMMON", "Атакуйте противника на соседней клетке"),
+            new Card(7, "Rest", "REST", "COMMON", "Восстановите 5 здоровья"),
+            new Card(8, "Rest", "REST", "COMMON", "Восстановите 5 здоровья"),
+            new Card(9, "Rest", "REST", "COMMON", "Восстановите 5 здоровья"),
+            new Card(10, "Heal", "HEAL", "RARE", "Восстановите 10 здоровья")
         ];
+        
+        // Перемешиваем колоду
         this.shuffleDeck();
+        
+        // Берем 5 карт в начальную руку
         this.drawStartingHand();
+        
+        // Обновляем UI для отображения количества карт в колоде
+        this.updateUI();
     }
 
     drawStartingHand() {
@@ -189,7 +196,10 @@ class Player {
         const drawPile = document.querySelector('.draw-pile');
         if (drawPile) {
             drawPile.dataset.count = this.deck.length;
-            drawPile.innerHTML = this.deck.length > 0 ? '<div class="card card-back"></div>' : '';
+            const deckCount = drawPile.querySelector('.deck-count');
+            if (deckCount) {
+                deckCount.textContent = this.deck.length;
+            }
         }
 
         // Обновляем руку
@@ -198,8 +208,6 @@ class Player {
             handContainer.innerHTML = '';
             this.hand.forEach((card, index) => {
                 const cardElement = card.createCardElement();
-                cardElement.dataset.index = index;
-                cardElement.classList.add('drawing');
                 handContainer.appendChild(cardElement);
             });
         }
@@ -208,12 +216,9 @@ class Player {
         const discardPile = document.querySelector('.discard-pile');
         if (discardPile) {
             discardPile.dataset.count = this.discardPile.length;
-            if (this.discardPile.length > 0) {
-                const topCard = this.discardPile[this.discardPile.length - 1];
-                discardPile.innerHTML = '';
-                discardPile.appendChild(topCard.createCardElement());
-            } else {
-                discardPile.innerHTML = '';
+            const discardCount = discardPile.querySelector('.deck-count');
+            if (discardCount) {
+                discardCount.textContent = this.discardPile.length;
             }
         }
     }

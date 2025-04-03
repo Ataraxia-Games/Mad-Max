@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mad Max Card Game</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <title>Mad Max Game</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="styles/base.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="styles/layout.css">
+    <!-- Card Styles -->
+    <link rel="stylesheet" href="styles/cards.css">
+    <!-- Board Styles -->
+    <link rel="stylesheet" href="styles/board.css">
+    <!-- Player Styles -->
+    <link rel="stylesheet" href="styles/players.css">
+    <!-- UI Styles -->
+    <link rel="stylesheet" href="styles/ui.css">
+    <!-- Animations -->
+    <link rel="stylesheet" href="styles/animations.css">
 </head>
 <body>
     <div class="game-container">
@@ -19,7 +32,90 @@
 
         <!-- Main Game Area -->
         <div class="game-area">
-            <div id="game-board" class="game-board"></div>
+            <div class="board-container">
+                <div class="unified-grid">
+                    <!-- Row 1: Player positions (starting from edge) -->
+                    <div class="player-slot" data-position="1"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="2"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="3"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="4"></div>
+
+                    <!-- Row 2: Card slots (starting with empty) -->
+                    <div class="spacer"></div>
+                    <div class="card-slot" data-slot="1">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="card-slot" data-slot="2">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="card-slot" data-slot="3">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+
+                    <!-- Row 3: Player positions -->
+                    <div class="player-slot" data-position="5"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="6"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="7"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="8"></div>
+
+                    <!-- Row 4: Card slots -->
+                    <div class="spacer"></div>
+                    <div class="card-slot" data-slot="4">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="card-slot" data-slot="5">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="card-slot" data-slot="6">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+
+                    <!-- Row 5: Player positions -->
+                    <div class="player-slot" data-position="9"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="10"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="11"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="12"></div>
+
+                    <!-- Row 6: Card slots -->
+                    <div class="spacer"></div>
+                    <div class="card-slot" data-slot="7">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="card-slot" data-slot="8">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="card-slot" data-slot="9">
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="spacer"></div>
+
+                    <!-- Row 7: Player positions -->
+                    <div class="player-slot" data-position="13"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="14"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="15"></div>
+                    <div class="spacer"></div>
+                    <div class="player-slot" data-position="16"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Player Pool -->

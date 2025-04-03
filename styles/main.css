@@ -1,3 +1,4 @@
+/* ===== Base Styles ===== */
 * {
     margin: 0;
     padding: 0;
@@ -14,7 +15,22 @@ body {
     align-items: center;
 }
 
-/* Game Container */
+/* ===== Spacer ===== */
+.spacer {
+    flex: 1;
+    min-height: 20px;
+    margin: 10px 0;
+    width: 100%;
+}
+
+/* ===== Responsive Base ===== */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+}
+
+/* ===== Game Container ===== */
 .game-container {
     width: 100%;
     max-width: 1000px;
@@ -26,7 +42,7 @@ body {
     overflow: hidden;
 }
 
-/* Game Header */
+/* ===== Game Header ===== */
 .game-header {
     height: 40px;
     background-color: #333;
@@ -49,7 +65,7 @@ body {
     border-radius: 4px;
 }
 
-/* Main Game Area */
+/* ===== Game Board ===== */
 .game-area {
     flex: 1;
     display: flex;
@@ -61,14 +77,14 @@ body {
 
 .game-board {
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     aspect-ratio: 1;
     background-color: #333;
     border-radius: 8px;
     padding: 20px;
 }
 
-/* Player Pool */
+/* ===== Player Pool ===== */
 .player-pool {
     height: 150px;
     background-color: #333;
@@ -115,7 +131,7 @@ body {
     padding: 0 20px;
 }
 
-/* End Turn Button */
+/* ===== Buttons ===== */
 .end-turn-btn {
     position: absolute;
     bottom: 220px;
@@ -135,7 +151,7 @@ body {
     background-color: #45a049;
 }
 
-/* Card Styles */
+/* ===== Cards ===== */
 .card {
     background-color: #444;
     border-radius: 8px;
@@ -153,7 +169,7 @@ body {
 /* Field Cards (larger) */
 .card-slot .card {
     width: 133px;
-    height: 187px;
+    height: 133px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -264,16 +280,84 @@ body {
     right: 5px;
 }
 
-/* Game Message */
+/* Card Rarity Colors */
+.card[data-rarity="common"] { background-color: #444; }
+.card[data-rarity="uncommon"] { background-color: rgb(81, 168, 226); }
+.card[data-rarity="rare"] { background-color: rgb(64, 148, 78); }
+.card[data-rarity="epic"] { background-color: rgb(97, 44, 167); }
+.card[data-rarity="legendary"] { background-color: rgb(230, 184, 33); }
+.card[data-rarity="mythic"] { background-color: rgb(204, 41, 68); }
+
+/* ===== Player Slots ===== */
+.player-slot {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: 2px dashed #666;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    margin: auto;
+    position: relative;
+}
+
+.player-slot:hover {
+    border-color: #999;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.player-slot.available {
+    border: 2px solid #4CAF50;
+    box-shadow: 0 0 10px #4CAF50;
+    cursor: pointer;
+}
+
+.player-slot.available:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.player-slot.occupied {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.player-slot.occupied .player-marker {
+    width: 20px;
+    height: 20px;
+    margin: 0 2px;
+}
+
+.player-slot[data-player-id="player1"] {
+    background-color: #eb3a26; /* Красный */
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.5);
+}
+
+.player-slot[data-player-id="player2"] {
+    background-color: #ecce24; /* Оранжевый */
+    box-shadow: 0 0 15px rgba(230, 126, 34, 0.5);
+}
+
+.player-slot[data-player-id="player3"] {
+    background-color: #2ecc71; /* Зеленый */
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+}
+
+/* ===== Game Messages ===== */
 .game-message {
     position: fixed;
-    top: 20px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 10px 20px;
-    border-radius: 4px;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-size: 24px;
     z-index: 1000;
     animation: fadeInOut 3s ease-in-out;
 }
@@ -321,7 +405,7 @@ button:hover {
 #board-container {
     position: relative;
     width: 1000px;
-    height: 800px;
+    height: 1000px;
     margin: 2rem auto;
     display: flex;
     justify-content: center;
@@ -342,22 +426,23 @@ button:hover {
 
 .unified-grid {
     display: grid;
-    grid-template-columns: repeat(9, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
     gap: 10px;
     width: 100%;
     height: 100%;
-    padding: 0px;
-}
-
-.spacer {
-    width: 100%;
-    height: 100%;
+    padding: 10px;
+    background-color: #333;
+    background-image: 
+        linear-gradient(to right, #000 1px, transparent 1px),
+        linear-gradient(to bottom, #000 1px, transparent 1px);
+    background-size: calc(100% / 7) calc(100% / 7);
 }
 
 .card-slot {
     width: 100%;
     height: 100%;
+    min-height: 100px;
     background-color: #444;
     border-radius: 8px;
     display: flex;
@@ -365,6 +450,66 @@ button:hover {
     align-items: center;
     transition: background-color 0.2s;
     position: relative;
+    border: 1px solid #000;
+}
+
+.card-slot:not(:has(.card)) {
+    background-color: #333;
+    border: 2px dashed #666;
+    background-image: repeating-linear-gradient(
+        45deg,
+        #444 0px,
+        #444 10px,
+        #333 10px,
+        #333 20px
+    );
+}
+
+.card-slot:not(:has(.card))::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    border: 2px solid #666;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+.card-slot:not(:has(.card))::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 60%;
+    height: 60%;
+    border: 2px solid #666;
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.slot-emoji {
+    font-size: 32px;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.card-slot:not(:has(.card)) .slot-emoji {
+    opacity: 1;
+}
+
+.card-slot:has(.card) .slot-emoji {
+    display: none;
 }
 
 .card-slot:hover {
@@ -416,43 +561,18 @@ button:hover {
 }
 
 .player-slot[data-player-id="player1"] {
-    background-color: #e74c3c; /* Красный */
+    background-color: #eb3a26; /* Красный */
     box-shadow: 0 0 15px rgba(231, 76, 60, 0.5);
 }
 
 .player-slot[data-player-id="player2"] {
-    background-color: #e67e22; /* Оранжевый */
+    background-color: #ecce24; /* Оранжевый */
     box-shadow: 0 0 15px rgba(230, 126, 34, 0.5);
 }
 
 .player-slot[data-player-id="player3"] {
     background-color: #2ecc71; /* Зеленый */
     box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
-}
-
-/* Стили для редкости карт */
-.card[data-rarity="common"] {
-    background-color: #444; /* Серый */
-}
-
-.card[data-rarity="uncommon"] {
-    background-color: #2a5; /* Зеленый */
-}
-
-.card[data-rarity="rare"] {
-    background-color: #2a5; /* Синий */
-}
-
-.card[data-rarity="epic"] {
-    background-color: #a52; /* Фиолетовый */
-}
-
-.card[data-rarity="legendary"] {
-    background-color: #a52; /* Золотой */
-}
-
-.card[data-rarity="mythic"] {
-    background-color: #a52; /* Красный */
 }
 
 /* Удаляем стили для типов карт */
@@ -641,27 +761,6 @@ button:hover {
     padding: 10px;
 }
 
-.game-message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 20px 40px;
-    border-radius: 10px;
-    font-size: 24px;
-    z-index: 1000;
-    animation: fadeInOut 3s ease-in-out;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { opacity: 0; }
-}
-
 .phase-info {
     font-size: 18px;
     color: #4a90e2;
@@ -718,4 +817,51 @@ button:hover {
 
 .hand-container .card.selected {
     border: 2px solid #4CAF50 !important;
+}
+
+.card-slot.empty {
+    background-color: #333;
+    border: 2px dashed #666;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.card-slot.empty:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* Стили для перегонов */
+.race-slot {
+    width: 30px;
+    height: 30px;
+    background-color: #333;
+    border: 2px solid #666;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+    position: relative;
+}
+
+/* Адаптивные размеры для разных типов ячеек */
+@media (max-width: 768px) {
+    .card-slot {
+        min-height: 80px;
+    }
+    
+    .player-slot {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .race-slot {
+        width: 50px;
+        height: 50px;
+    }
 } 
