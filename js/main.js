@@ -2,15 +2,61 @@ let game;
 let network;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize network and game
-    network = new Network();
-    game = new Game();
+    // Создаем игру
+    window.game = new Game();
     
-    // Connect to server
-    network.connect();
+    // Инициализируем игру без сокета (для тестового режима)
+    window.game.initialize();
     
-    // Setup UI event listeners
-    setupEventListeners();
+    // Создаем трех тестовых игроков
+    const player1 = new Player('player1', 'Воин Пустоши');
+    const player2 = new Player('player2', 'Механик Дорог');
+    const player3 = new Player('player3', 'Рейдер Бури');
+
+    // Добавляем игроков в игру
+    window.game.addPlayer(player1);
+    window.game.addPlayer(player2);
+    window.game.addPlayer(player3);
+
+    // Начинаем игру
+    window.game.startGame();
+
+    // Добавляем обработчик для кнопки End Turn
+    const endTurnBtn = document.getElementById('end-turn-btn');
+    if (endTurnBtn) {
+        endTurnBtn.addEventListener('click', () => {
+            if (window.game.currentPlayer) {
+                window.game.currentPlayer.endTurn();
+            }
+        });
+    }
+
+    // Добавляем обработчик кликов по игровому полю
+    document.getElementById('game-board').addEventListener('click', (event) => {
+        const playerSlot = event.target.closest('.player-slot');
+        if (playerSlot && window.game.phase === 'POSITION') {
+            const position = parseInt(playerSlot.dataset.position);
+            if (!isNaN(position)) {
+                window.game.handlePlayerPosition(window.game.currentPlayer, position);
+            }
+        }
+    });
+
+    // Добавляем обработчик для карт
+    document.addEventListener('click', (event) => {
+        const card = event.target.closest('.card');
+        if (card && window.game.phase === 'PLAY') {
+            const cardIndex = Array.from(card.parentElement.children).indexOf(card);
+            const targetSlot = event.target.closest('.player-slot, .card-slot');
+            
+            if (targetSlot) {
+                const position = parseInt(targetSlot.dataset.position);
+                if (!isNaN(position)) {
+                    window.game.handleCardPlay(cardIndex, position);
+                }
+            }
+        }
+    });
 });
 
 function setupEventListeners() {
@@ -28,20 +74,6 @@ function setupEventListeners() {
         const playerName = prompt('Enter your name:');
         if (roomId && playerName) {
             network.joinRoom(roomId, playerName);
-        }
-    });
-
-    // Card click handlers
-    document.addEventListener('click', (event) => {
-        const card = event.target.closest('.card');
-        if (card) {
-            const cardId = card.dataset.cardId;
-            const cardIndex = Array.from(card.parentElement.children).indexOf(card);
-            const targetPosition = event.target.closest('.field-slot')?.dataset.position;
-            
-            if (targetPosition !== undefined) {
-                game.playCard(cardIndex, parseInt(targetPosition));
-            }
         }
     });
 } 

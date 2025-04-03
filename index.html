@@ -3,38 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card Game</title>
+    <title>Mad Max Card Game</title>
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <div id="game-container">
-        <div id="lobby" class="screen">
-            <h1>Card Game</h1>
-            <div class="menu">
-                <button id="create-room">Create Room</button>
-                <button id="join-room">Join Room</button>
+    <div class="game-container">
+        <!-- Game Header -->
+        <div class="game-header">
+            <div class="game-info">
+                <div class="phase-info">Фаза: <span id="current-phase">SETUP</span></div>
+                <div class="round-info">Раунд: <span id="current-round">1</span></div>
+                <div class="current-player">Игрок: <span id="current-player-name">-</span></div>
             </div>
         </div>
-        
-        <div id="game-room" class="screen hidden">
-            <div id="game-board">
-                <div id="player-hand" class="hand"></div>
-                <div id="game-field" class="field"></div>
-                <div id="opponent-hand" class="hand"></div>
+
+        <!-- Main Game Area -->
+        <div class="game-area">
+            <div id="game-board" class="game-board"></div>
+        </div>
+
+        <!-- Player Pool -->
+        <div class="player-pool">
+            <div class="deck-area draw-pile" data-count="0">
+                <div class="deck-label">Колода</div>
+                <div class="deck-count">0</div>
             </div>
-            <div id="game-info">
-                <div id="player-stats"></div>
-                <div id="opponent-stats"></div>
+            <div class="hand-container"></div>
+            <div class="deck-area discard-pile" data-count="0">
+                <div class="deck-label">Сброс</div>
+                <div class="deck-count">0</div>
             </div>
         </div>
+
+        <!-- End Turn Button -->
+        <button id="end-turn-btn" class="end-turn-btn" style="display: none;">Завершить ход</button>
     </div>
 
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/game.js"></script>
     <script src="js/card.js"></script>
+    <script src="js/board.js"></script>
     <script src="js/player.js"></script>
-    <script src="js/network.js"></script>
+    <script src="js/game.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html> 
