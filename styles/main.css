@@ -137,8 +137,6 @@ body {
 
 /* Card Styles */
 .card {
-    width: 100px;
-    height: 140px;
     background-color: #444;
     border-radius: 8px;
     padding: 10px;
@@ -149,6 +147,7 @@ body {
     align-items: center;
     text-align: center;
     position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Field Cards (larger) */
@@ -393,9 +392,27 @@ button:hover {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
+.player-slot.available {
+    border: 2px solid #4CAF50;
+    box-shadow: 0 0 10px #4CAF50;
+    cursor: pointer;
+}
+
+.player-slot.available:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
 .player-slot.occupied {
-    border: none;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.player-slot.occupied .player-marker {
+    width: 20px;
+    height: 20px;
+    margin: 0 2px;
 }
 
 .player-slot[data-player-id="player1"] {
@@ -413,36 +430,37 @@ button:hover {
     box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
 }
 
+/* Стили для редкости карт */
 .card[data-rarity="common"] {
-    background: linear-gradient(135deg, #4a4a4a, #2a2a2a);
-    border: 1px solid #666;
+    background-color: #444; /* Серый */
 }
 
 .card[data-rarity="uncommon"] {
-    background: linear-gradient(135deg, #4a90e2, #357abd);
-    border: 1px solid #4a90e2;
+    background-color: #2a5; /* Зеленый */
 }
 
 .card[data-rarity="rare"] {
-    background: linear-gradient(135deg, #ffd700, #b8860b);
-    border: 1px solid #ffd700;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    background-color: #2a5; /* Синий */
 }
 
-.card[data-type="move"] {
-    border-left: 4px solid #4a90e2;
+.card[data-rarity="epic"] {
+    background-color: #a52; /* Фиолетовый */
 }
 
-.card[data-type="attack"] {
-    border-left: 4px solid #e24a4a;
+.card[data-rarity="legendary"] {
+    background-color: #a52; /* Золотой */
 }
 
-.card[data-type="rest"] {
-    border-left: 4px solid #4ae24a;
+.card[data-rarity="mythic"] {
+    background-color: #a52; /* Красный */
 }
 
-.card[data-type="heal"] {
-    border-left: 4px solid #e2e24a;
+/* Удаляем стили для типов карт */
+.card.move,
+.card.attack,
+.card.rest,
+.card.heal {
+    background: none;
 }
 
 .card .card-name {
@@ -501,23 +519,6 @@ button:hover {
 .card-back {
     background: linear-gradient(45deg, #1a1a1a, #333);
     border: 2px solid #444;
-}
-
-/* Стили для разных типов карт */
-.card-move {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-}
-
-.card-attack {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-}
-
-.card-rest {
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
-}
-
-.card-heal {
-    background: linear-gradient(135deg, #f1c40f, #f39c12);
 }
 
 /* Области для колод */
@@ -683,7 +684,7 @@ button:hover {
 
 .card-victory-points {
     position: absolute;
-    bottom: 5px;
+    bottom: 0px;
     left: 0;
     right: 0;
     text-align: center;
@@ -702,4 +703,19 @@ button:hover {
 /* Стили для карт на поле */
 .card-slot .card .card-victory-points {
     font-size: 14px;
+}
+
+.hand-container .card {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.hand-container .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hand-container .card.selected {
+    border: 2px solid #4CAF50 !important;
 } 

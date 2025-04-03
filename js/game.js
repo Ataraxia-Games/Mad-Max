@@ -10,6 +10,10 @@ class Game {
         this.round = 1;
         this.positionedPlayers = new Set();
         this.messageTimeout = null;
+        this.currentPlayerIndex = 0;
+        this.selectedCard = null;
+        this.selectedPosition = null;
+        this.availablePositions = new Set();
     }
 
     setupEventListeners() {
@@ -320,5 +324,124 @@ class Game {
 
     allPlayersPositioned() {
         return this.positionedPlayers.size === this.players.size;
+    }
+
+    selectCard(card) {
+        if (this.phase !== 'PLAYER_TURN') {
+            console.log('Not player turn phase');
+            return;
+        }
+        if (card.type !== 'MOVE') {
+            console.log('Not a MOVE card');
+            return;
+        }
+
+        console.log('Selecting MOVE card:', card);
+        this.selectedCard = card;
+        this.highlightAvailablePositions();
+        this.updateUI();
+    }
+
+    highlightAvailablePositions() {
+        // Очищаем предыдущие выделения
+        this.clearHighlights();
+        
+        const currentPlayer = this.players[this.currentPlayerIndex];
+        if (!currentPlayer) {
+            console.log('No current player');
+            return;
+        }
+        
+        const currentPosition = currentPlayer.position;
+        console.log('Current player position:', currentPosition);
+        
+        // Получаем соседние позиции
+        const neighbors = this.getNeighborPositions(currentPosition);
+        console.log('Available positions:', neighbors);
+        
+        // Выделяем доступные позиции
+        neighbors.forEach(pos => {
+            const slot = document.querySelector(`.player-slot[data-position="${pos}"]`);
+            if (slot) {
+                slot.classList.add('available');
+                this.availablePositions.add(pos);
+            }
+        });
+    }
+
+    getNeighborPositions(position) {
+        // Возвращает массив соседних позиций
+        const neighbors = [];
+        const row = Math.floor((position - 1) / 5);
+        const col = (position - 1) % 5;
+
+        // Проверяем верхнюю позицию
+        if (row > 0) neighbors.push(position - 5);
+        // Проверяем нижнюю позицию
+        if (row < 2) neighbors.push(position + 5);
+        // Проверяем левую позицию
+        if (col > 0) neighbors.push(position - 1);
+        // Проверяем правую позицию
+        if (col < 4) neighbors.push(position + 1);
+
+        return neighbors;
+    }
+
+    clearHighlights() {
+        document.querySelectorAll('.player-slot.available').forEach(slot => {
+            slot.classList.remove('available');
+        });
+        this.availablePositions.clear();
+    }
+
+    selectPosition(position) {
+        if (!this.availablePositions.has(position)) return;
+        
+        this.selectedPosition = position;
+        this.executeMove();
+    }
+
+    executeMove() {
+        if (!this.selectedCard || !this.selectedPosition) return;
+
+        const currentPlayer = this.players.get(this.currentPlayer.id);
+        const targetPosition = this.selectedPosition;
+        
+        // Проверяем, занята ли позиция
+        const occupyingPlayer = this.players.find(p => p.position === targetPosition);
+        
+        if (occupyingPlayer) {
+            // Если позиция занята, уменьшаем размер фишки
+            const slot = document.querySelector(`.player-slot[data-position="${targetPosition}"]`);
+            if (slot) {
+                slot.classList.add('occupied');
+            }
+        }
+
+        // Перемещаем игрока
+        currentPlayer.position = targetPosition;
+        this.updatePlayerPositions();
+
+        // Отправляем карту в сброс
+        currentPlayer.discardCard(this.selectedCard);
+
+        // Очищаем выделения
+        this.clearHighlights();
+        this.selectedCard = null;
+        this.selectedPosition = null;
+    }
+
+    endTurn() {
+        if (this.phase !== 'PLAYER_TURN') return;
+        
+        // Передаем ход следующему игроку
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.size;
+        
+        // Если все игроки сделали ход, начинаем новый раунд
+        if (this.currentPlayerIndex === 0) {
+            this.round++;
+        }
+        
+        this.updateGameState();
     }
 } 

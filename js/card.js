@@ -101,9 +101,8 @@ class Card {
         characters.forEach(char => {
             const count = char.rarity === 'RARE' ? 3 : (char.rarity === 'UNCOMMON' ? 4 : 5);
             for (let i = 0; i < count; i++) {
-                // Редкие карты дают 3 очка, необычные 2, обычные 1
                 const victoryPoints = Math.random() < 0.7 ? (char.rarity === 'RARE' ? 3 : (char.rarity === 'UNCOMMON' ? 2 : 1)) : 0;
-                cards.push(new Card(id++, char.name, 'ATTACK', char.rarity, char.description, victoryPoints));
+                cards.push(new Card(id++, char.name, 'MOVE', char.rarity, char.description, victoryPoints));
             }
         });
 
@@ -121,9 +120,27 @@ class Card {
             const count = location.rarity === 'RARE' ? 3 : (location.rarity === 'UNCOMMON' ? 4 : 5);
             for (let i = 0; i < count; i++) {
                 const victoryPoints = Math.random() < 0.7 ? (location.rarity === 'RARE' ? 3 : (location.rarity === 'UNCOMMON' ? 2 : 1)) : 0;
-                cards.push(new Card(id++, location.name, 'REST', location.rarity, location.description, victoryPoints));
+                cards.push(new Card(id++, location.name, 'MOVE', location.rarity, location.description, victoryPoints));
             }
         });
+
+        // Добавляем эпические карты
+        for (let i = 0; i < 5; i++) {
+            const victoryPoints = Math.random() < 0.7 ? 3 : 0;
+            cards.push(new Card(id++, `Эпическая карта ${i + 1}`, 'MOVE', 'EPIC', 'Эпическое описание', victoryPoints));
+        }
+
+        // Добавляем легендарные карты
+        for (let i = 0; i < 3; i++) {
+            const victoryPoints = Math.random() < 0.7 ? 3 : 0;
+            cards.push(new Card(id++, `Легендарная карта ${i + 1}`, 'MOVE', 'LEGENDARY', 'Легендарное описание', victoryPoints));
+        }
+
+        // Добавляем мифические карты
+        for (let i = 0; i < 2; i++) {
+            const victoryPoints = Math.random() < 0.7 ? 3 : 0;
+            cards.push(new Card(id++, `Мифическая карта ${i + 1}`, 'MOVE', 'MYTHIC', 'Мифическое описание', victoryPoints));
+        }
 
         // Перемешиваем колоду
         for (let i = cards.length - 1; i > 0; i--) {
@@ -152,17 +169,12 @@ class Card {
         nameElement.className = 'card-name';
         nameElement.textContent = this.name;
         
-        const typeElement = document.createElement('div');
-        typeElement.className = 'card-type';
-        typeElement.textContent = this.type;
-        
         const descriptionElement = document.createElement('div');
         descriptionElement.className = 'card-description';
         descriptionElement.textContent = this.description;
         
         // Добавляем основной контент
         cardElement.appendChild(nameElement);
-        cardElement.appendChild(typeElement);
         cardElement.appendChild(descriptionElement);
         
         // Добавляем эмодзи, если он есть

@@ -44,5 +44,51 @@
     <script src="js/player.js"></script>
     <script src="js/game.js"></script>
     <script src="js/main.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const game = new Game();
+        
+        // Обработчик выбора карты
+        document.addEventListener('click', (e) => {
+            const cardElement = e.target.closest('.card');
+            if (cardElement && game.phase === 'PLAYER_TURN') {
+                // Убираем выделение с предыдущей выбранной карты
+                document.querySelectorAll('.hand-container .card.selected').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                const cardId = parseInt(cardElement.dataset.cardId);
+                const currentPlayer = game.players[game.currentPlayerIndex];
+                if (!currentPlayer) {
+                    console.log('No current player');
+                    return;
+                }
+                const card = currentPlayer.hand.find(c => c.id === cardId);
+                if (card) {
+                    console.log('Selected card:', card);
+                    cardElement.classList.add('selected');
+                    game.selectCard(card);
+                } else {
+                    console.log('Card not found in player hand');
+                }
+            }
+        });
+
+        // Обработчик выбора позиции
+        document.addEventListener('click', (e) => {
+            const slotElement = e.target.closest('.player-slot');
+            if (slotElement && game.phase === 'PLAYER_TURN') {
+                const position = parseInt(slotElement.dataset.position);
+                game.selectPosition(position);
+            }
+        });
+
+        // Обработчик кнопки End Turn
+        document.getElementById('end-turn-btn').addEventListener('click', () => {
+            game.endTurn();
+        });
+    });
+    </script>
 </body>
 </html> 
