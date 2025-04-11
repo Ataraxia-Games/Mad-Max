@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mad Max - Колодостроительная Игра</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="game-container">
+        <header class="info-panel">
+            <!-- Информационная панель (хедер) -->
+            <div id="players-info"></div>
+        </header>
+        
+        <main class="game-board">
+            <!-- Игровое поле 7x7 -->
+            <div id="game-board"></div>
+        </main>
+        
+        <footer class="cards-panel">
+            <!-- Панель карт (нижняя панель) -->
+            <div class="player-deck">
+                <div id="deck" class="deck"></div>
+                <div id="hand" class="hand"></div>
+                <div id="discard" class="discard"></div>
+            </div>
+            
+            <div class="controls">
+                <button id="end-turn-btn">Завершить ход</button>
+                <button id="undo-btn">Отменить действие</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Диалог для отображения сообщений -->
+    <div id="message-dialog" class="message-dialog">
+        <h3 id="dialog-title">Название</h3>
+        <p id="dialog-message">Сообщение</p>
+        <button id="dialog-close-btn">OK</button>
+    </div>
+
+    <!-- Скрипты -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html> 

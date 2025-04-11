@@ -1,0 +1,400 @@
+/* Основные стили для игры Mad Max */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #222;
+    background-image: url('https://i.imgur.com/wTdQP8D.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #fff;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Информационная панель */
+.info-panel {
+    background-color: rgba(51, 51, 51, 0.8);
+    padding: 15px;
+    border-bottom: 2px solid #555;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+#players-info {
+    display: flex;
+    justify-content: space-around;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.player-info.current-player {
+    background-color: rgba(255, 165, 0, 0.3);
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+    transform: scale(1.05);
+}
+
+.player-color-marker {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.player-name {
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.player-vp, .player-hand-size, .player-injuries {
+    margin-right: 15px;
+    font-size: 0.9em;
+}
+
+/* Игровое поле */
+.game-board {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: 8px;
+    width: 100%;
+    max-width: 700px;
+    aspect-ratio: 1/1;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.cell {
+    background-color: #444;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.cell:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.cell.crossroad {
+    background-color: #666;
+    background-image: url('https://i.imgur.com/H7ZTGH6.png');
+    background-size: contain;
+    background-position: center;
+}
+
+.cell.card-slot {
+    background-color: #775544;
+    background-image: url('https://i.imgur.com/jZACBdu.png');
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.cell.point-of-interest {
+    background-color: #557744;
+    background-image: url('https://i.imgur.com/zWzZ4zB.png');
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.cell.highlighted {
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.7);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.7); }
+    50% { box-shadow: 0 0 15px 5px rgba(255, 215, 0, 0.9); }
+    100% { box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.7); }
+}
+
+.cell.player-position {
+    position: relative;
+}
+
+.player-marker {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+    z-index: 10;
+}
+
+/* Панель карт */
+.cards-panel {
+    background-color: rgba(51, 51, 51, 0.8);
+    padding: 15px;
+    border-top: 2px solid #555;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.player-deck {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.deck, .hand, .discard {
+    min-height: 120px;
+    border: 2px solid #555;
+    border-radius: 8px;
+    background-color: rgba(34, 34, 34, 0.7);
+}
+
+.deck, .discard {
+    width: 90px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.deck-count, .discard-count {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}
+
+.hand {
+    flex: 1;
+    margin: 0 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    overflow-x: auto;
+}
+
+.card {
+    width: 80px;
+    height: 120px;
+    background-color: #666;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid #888;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+}
+
+.card-title {
+    font-weight: bold;
+    text-align: center;
+    font-size: 12px;
+    margin-bottom: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 2px;
+    border-radius: 4px;
+}
+
+.card-description {
+    font-size: 10px;
+    text-align: center;
+    margin-top: auto;
+}
+
+.card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.6);
+}
+
+.card.card-move {
+    background-color: #4286f4;
+    background-image: url('https://i.imgur.com/7gF4h3q.png');
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.card.card-attack {
+    background-color: #e74c3c;
+    background-image: url('https://i.imgur.com/nRBbQXO.png');
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.card.card-diplomacy {
+    background-color: #3498db;
+    background-image: url('https://i.imgur.com/qGnkJiH.png');
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.card.card-rest {
+    background-color: #2ecc71;
+    background-image: url('https://i.imgur.com/zjRvJRx.png');
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+button {
+    padding: 12px 25px;
+    background-color: #775544;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+}
+
+button:hover {
+    background-color: #886655;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* Диалог с сообщениями */
+.message-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(51, 51, 51, 0.95);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    max-width: 80%;
+    text-align: center;
+    display: none;
+}
+
+.message-dialog.active {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.message-dialog h3 {
+    margin-bottom: 15px;
+    color: #f39c12;
+}
+
+.message-dialog p {
+    margin-bottom: 20px;
+}
+
+.message-dialog button {
+    background-color: #f39c12;
+}
+
+.message-dialog button:hover {
+    background-color: #e67e22;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .game-board {
+        padding: 10px;
+    }
+    
+    #game-board {
+        max-width: 100%;
+        gap: 5px;
+    }
+    
+    .card {
+        width: 60px;
+        height: 90px;
+    }
+    
+    .card-title {
+        font-size: 10px;
+    }
+    
+    .card-description {
+        font-size: 8px;
+    }
+    
+    .player-name, .player-vp, .player-hand-size, .player-injuries {
+        font-size: 0.8em;
+        margin-right: 8px;
+    }
+    
+    button {
+        padding: 8px 16px;
+        font-size: 0.9em;
+    }
+} 
